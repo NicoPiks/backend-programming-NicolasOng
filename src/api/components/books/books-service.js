@@ -1,7 +1,8 @@
 const booksRepository = require('./books-repository');
 
-async function getBooks() {
-  return booksRepository.getBooks();
+async function getBooks({offset, limit}) {
+   const books = booksRepository.getBooks(offset, limit)
+  return books;
 }
 
 async function create(title) {

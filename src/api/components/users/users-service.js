@@ -1,7 +1,9 @@
 const usersRepository = require('./users-repository');
+const bcrypt = require('bcrypt');
 
-async function getUsers() {
-  return usersRepository.getUsers();
+async function getUsers({offset, limit}) {
+  const users = usersRepository.getUsers(offset, limit)
+  return users;
 }
 
 async function getUser(id) {
@@ -25,6 +27,16 @@ async function deleteUser(id) {
   return usersRepository.deleteUser(id);
 }
 
+async function login(email, password){
+  const user = usersRepository.getUserByEmail(email);
+
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    throw new Error('INVALID_PASSWORD'); 
+  }
+
+  return user; 
+}
+
 module.exports = {
   getUsers,
   getUser,
@@ -32,4 +44,5 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  login,
 };

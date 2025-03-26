@@ -13,6 +13,9 @@ module.exports = (app) => {
   // Create a new user
   route.post('/', usersController.createUser);
 
+  // Authenticate A User
+  route.post('/authentication/login', usersController.login)
+
   // Get user detail
   route.get('/:id', usersController.getUser);
 

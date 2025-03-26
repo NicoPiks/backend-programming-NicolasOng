@@ -4,7 +4,9 @@ const { hashPassword } = require('../../../utils/password');
 
 async function getUsers(request, response, next) {
   try {
-    const users = await usersService.getUsers();
+    const offset = request.query.offset || 0;
+    const limit = request.query.limit || 10;
+    const users = await usersService.getUsers({offset, limit});
 
     return response.status(200).json(users);
   } catch (error) {
@@ -191,6 +193,16 @@ async function deleteUser(request, response, next) {
   }
 }
 
+async function login(request, response){
+  try {
+      const { email, password } = request.body;
+      const user = await usersService.login(email, password);
+      return response.status(200).json({ message: 'Login success', user });
+    } catch (error) {
+      return response.status(403).json({ error: 'INVALID_PASSWORD' });
+  }
+}
+
 module.exports = {
   getUsers,
   getUser,
@@ -198,4 +210,5 @@ module.exports = {
   updateUser,
   changePassword,
   deleteUser,
+  login,
 };
